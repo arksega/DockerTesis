@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+
+  prometheus:
+    image: quay.io/prometheus/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+
+  phpfpm:
+    image: hipages/php
+    environment:
+      PHP_FPM_PM_STATUS_PATH: "/status"
+    volumes:
+      - "./ampache:/var/www/html"
+      - "/home/CumulO/Musica/curated:/media"
+
+  exporter:
+    image: hipages/php-fpm_exporter:0.0.4
+    environment:
+      PHP_FPM_SCRAPE_URI: "tcp://phpfpm:9000/status"
+      PHP_FPM_LOG_LEVEL: "debug"
+
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: "mariabonita"
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8050:80"
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf"
+      - "./ampache:/var/www/html"
+
+  cadvisor:
+    image: google/cadvisor:latest
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+    - redis
+
+  redis:
+    image: redis:latest
