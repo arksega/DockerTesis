@@ -35,6 +35,8 @@ services:
     volumes:
       - "./nginx.conf:/etc/nginx/nginx.conf"
       - "./ampache:/var/www/html"
+    depends_on:
+    - phpfpm
 
   cadvisor:
     image: google/cadvisor:latest
