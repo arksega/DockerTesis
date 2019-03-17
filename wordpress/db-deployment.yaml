@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.18.0 (06a2e56)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: exampledb
+        - name: MYSQL_PASSWORD
+          value: examplepass
+        - name: MYSQL_RANDOM_ROOT_PASSWORD
+          value: "1"
+        - name: MYSQL_USER
+          value: exampleuser
+        image: mysql:5.7
+        name: db
+        ports:
+        - name: db
+          containerPort: 3306
+        resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    io.kompose.service: db
+  type: LoadBalancer
