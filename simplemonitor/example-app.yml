@@ -23,6 +23,7 @@ metadata:
   labels:
     app: example-app
 spec:
+  type: NodePort
   selector:
     app: example-app
   ports:
