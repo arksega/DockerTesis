@@ -27,6 +27,9 @@ kubectl expose deployment monitor-grafana --name grafana --type=LoadBalancer
 
 # Loging admin:prom-operator
 minikube service grafana --url
+
+# Prometheus
+minikube service prometheus --url
 ```
 
 ## Exposed metrics
