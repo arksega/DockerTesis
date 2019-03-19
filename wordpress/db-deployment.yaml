@@ -50,3 +50,5 @@ spec:
   selector:
     io.kompose.service: db
   type: LoadBalancer
+
+# vim: ts=2 sts=2 sw=2 et
