@@ -1,12 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.18.0 (06a2e56)
-  creationTimestamp: null
   labels:
-    io.kompose.service: db
+    app: db
   name: db
 spec:
   replicas: 1
@@ -15,7 +11,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: db
+        app: db
     spec:
       containers:
       - env:
@@ -32,7 +28,11 @@ spec:
         ports:
         - name: db
           containerPort: 3306
-        resources: {}
+        resources:
+          limits:
+            cpu: "0.2"
+          requests:
+            cpu: "0.1"
       restartPolicy: Always
 status: {}
 ---
@@ -40,7 +40,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    io.kompose.service: db
+    app: db
   name: db
 spec:
   ports:
@@ -48,7 +48,7 @@ spec:
     protocol: TCP
     targetPort: 3306
   selector:
-    io.kompose.service: db
-  type: LoadBalancer
+    app: db
+  type: ClusterIP
 
 # vim: ts=2 sts=2 sw=2 et
