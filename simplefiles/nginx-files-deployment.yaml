@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx-files
+  name: nginx-files
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    name: web
+  - port: 9145
+    protocol: TCP
+    targetPort: 9145
+    name: metrics
+  selector:
+    app: nginx-files
+  type: NodePort
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-files
+  labels:
+    release: monitor
+spec:
+  endpoints:
+  - interval: 30s
+    path: /metrics
+    port: metrics
+  selector:
+    matchLabels:
+      app: nginx-files
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-files
+  name: nginx-files
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-files
+    spec:
+      containers:
+      - image: arksega/nlf
+        name: nginx-files
+        ports:
+        - containerPort: 80
+          name: web
+        - containerPort: 9145
+          name: metrics
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "0.5"
+      restartPolicy: Always
+
+# vim: ts=2 sts=2 sw=2 et
