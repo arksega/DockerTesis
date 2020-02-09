@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -7,6 +7,9 @@ metadata:
 spec:
   replicas: 1
   strategy: {}
+  selector:
+    matchLabels:
+      app: db
   template:
     metadata:
       creationTimestamp: null
@@ -30,9 +33,9 @@ spec:
           containerPort: 3306
         resources:
           limits:
-            cpu: "0.2"
+            cpu: "0.6"
           requests:
-            cpu: "0.1"
+            cpu: "0.3"
       restartPolicy: Always
 status: {}
 ---
