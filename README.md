@@ -9,10 +9,12 @@ minikube start
 # Start wordpress deployments
 cd wordpress
 kubectl create namespace wp
-kubectl apply -f db-deployment.yaml --namespace wp
+kubectl create -f envoy-config.yaml --namespace wp
+kubectl create -f nginx-config.yaml --namespace wp
+kubectl create -f db-deployment.yaml --namespace wp
 # Check db is running
 kubectl get po --watch
-kubectl apply -f wordpress-deployment.yaml --namespace wp
+kubectl create -f wordpress-deployment.yaml --namespace wp
 # Check worpress is running
 kubectl get po --watch --namespace wp
 # Get external address
