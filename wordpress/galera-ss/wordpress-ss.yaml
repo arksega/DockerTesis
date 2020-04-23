@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wp00
+  name: wp00
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    name: web
+  - port: 9901
+    protocol: TCP
+    targetPort: 9901
+    name: metrics
+  selector:
+    app: wp00
+  type: NodePort
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: wp00
+  labels:
+    release: monitor
+spec:
+  endpoints:
+  - interval: 40s
+    path: /stats/prometheus
+    port: metrics
+  selector:
+    matchLabels:
+      app: wp00
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: wp00
+  name: wp00
+spec:
+  replicas: 1
+  serviceName: wp00
+  selector:
+    matchLabels:
+      app: wp00
+  template:
+    metadata:
+      labels:
+        app: wp00
+    spec:
+      volumes:
+      - name: php-fpm-unix-socket
+        emptyDir:
+          medium: Memory
+      - name: wp00-root
+        emptyDir:
+          medium: Memory
+      - name: nginx-site
+        configMap:
+          name: nginx-site
+      - name: envoy-nginx
+        configMap:
+          name: envoy-nginx
+      containers:
+      - env:
+        - name: WORDPRESS_DB_HOST
+          value: galera
+        - name: WORDPRESS_DB_NAME
+          value: exampledatabase
+        - name: WORDPRESS_DB_PASSWORD
+          value: examplepass
+        - name: WORDPRESS_DB_USER
+          value: exampleuser
+        image: wordpress:fpm-alpine
+        name: wp00
+        volumeMounts:
+        - name: php-fpm-unix-socket
+          mountPath: /var/run
+        - name: wp00-root
+          mountPath: /var/www/html
+        resources:
+          limits:
+            cpu: "0.2"
+          requests:
+            cpu: "0.1"
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 8080
+          name: nginx
+        volumeMounts:
+        - name: php-fpm-unix-socket
+          mountPath: /var/run
+        - name: wp00-root
+          mountPath: /var/www/html
+        - name: nginx-site
+          mountPath: /etc/nginx/conf.d/
+          readOnly: true
+        resources:
+          limits:
+            cpu: "0.2"
+          requests:
+            cpu: "0.1"
+      - name: envoy
+        image: envoyproxy/envoy-alpine-dev
+        ports:
+        - containerPort: 80
+          name: web
+        - containerPort: 9901
+          name: metrics
+        volumeMounts:
+        - name: envoy-nginx
+          mountPath: /etc/envoy/
+          readOnly: true
+      restartPolicy: Always
+  
+  volumeClaimTemplates:
+  - metadata:
+      name: wp00-root
+    spec:
+      accessModes:
+          - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+
+# vim: ts=2 sts=2 sw=2 et
