@@ -15,7 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 29,
+  "id": 26,
+  "iteration": 1587969092950,
   "links": [],
   "panels": [
     {
@@ -55,11 +56,11 @@
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(envoy_http_downstream_rq_xx{envoy_http_conn_manager_prefix=\"ingress_http\",}[5m])",
+          "expr": "sum(rate(envoy_http_downstream_rq_xx{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m])) by (envoy_response_code_class)",
           "legendFormat": "{{envoy_response_code_class}}00",
           "refId": "A"
         }
@@ -147,7 +148,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "1 - sum(rate(envoy_http_downstream_rq_xx{envoy_response_code_class=\"5\"}[5m])) / sum(rate(envoy_http_downstream_rq_xx[5m]))",
+          "expr": "1 - sum(rate(envoy_http_downstream_rq_xx{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\", envoy_response_code_class=\"5\"}[5m])) / sum(rate(envoy_http_downstream_rq_xx{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m]))",
           "legendFormat": "SR",
           "refId": "A"
         }
@@ -177,182 +178,6 @@
           "label": null,
           "logBase": 1,
           "max": "1",
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 8
-      },
-      "hiddenSeries": false,
-      "id": 6,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(envoy_http_downstream_rq_completed{envoy_http_conn_manager_prefix=\"ingress_http\"}[5m])",
-          "legendFormat": "ingress",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Requests per second Downstream",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 8
-      },
-      "hiddenSeries": false,
-      "id": 8,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(envoy_cluster_upstream_rq_total[5m])",
-          "legendFormat": "rqs",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Requests per second Upstream",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
           "min": null,
           "show": true
         },
@@ -440,7 +265,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 8
       },
       "hiddenSeries": false,
       "id": 4,
@@ -469,17 +294,17 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.90, rate(envoy_http_downstream_rq_time_bucket{envoy_http_conn_manager_prefix=\"ingress_http\"}[5m]))",
+          "expr": "histogram_quantile(0.90, rate(envoy_http_downstream_rq_time_bucket{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m]))",
           "legendFormat": "0.90",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, rate(envoy_http_downstream_rq_time_bucket{envoy_http_conn_manager_prefix=\"ingress_http\"}[5m]))",
+          "expr": "histogram_quantile(0.95, rate(envoy_http_downstream_rq_time_bucket{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m]))",
           "legendFormat": "0.95",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.99, rate(envoy_http_downstream_rq_time_bucket{envoy_http_conn_manager_prefix=\"ingress_http\"}[5m]))",
+          "expr": "histogram_quantile(0.99, rate(envoy_http_downstream_rq_time_bucket{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m]))",
           "legendFormat": "0.99",
           "refId": "C"
         }
@@ -490,7 +315,8 @@
           "fill": true,
           "line": true,
           "op": "gt",
-          "value": 240
+          "value": 240,
+          "yaxis": "left"
         }
       ],
       "timeFrom": null,
@@ -535,64 +361,6 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                240
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          },
-          {
-            "evaluator": {
-              "params": [
-                350
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "C",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
-        "handler": 1,
-        "name": "Latency Percentiles Upstream alert",
-        "noDataState": "no_data",
-        "notifications": []
-      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -604,10 +372,10 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 8
       },
       "hiddenSeries": false,
-      "id": 10,
+      "id": 13,
       "legend": {
         "avg": false,
         "current": false,
@@ -633,34 +401,26 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.90, rate(envoy_cluster_upstream_rq_time_bucket[5m]))",
+          "expr": "histogram_quantile(0.90, sum(rate(envoy_http_downstream_rq_time_bucket{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m])) by (le))",
           "legendFormat": "0.90",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, rate(envoy_cluster_upstream_rq_time_bucket[5m]))",
+          "expr": "histogram_quantile(0.95, sum(rate(envoy_http_downstream_rq_time_bucket{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m])) by (le))",
           "legendFormat": "0.95",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.99, rate(envoy_cluster_upstream_rq_time_bucket[5m]))",
+          "expr": "histogram_quantile(0.99, sum(rate(envoy_http_downstream_rq_time_bucket{namespace=\"$namespace\", service=\"$workload\", envoy_http_conn_manager_prefix=\"$prefix\" }[5m])) by (le))",
           "legendFormat": "0.99",
           "refId": "C"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 240
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Latency Percentiles Upstream",
+      "title": "Latency Percentiles Downstream",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -704,10 +464,130 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": "$datasource",
+        "definition": "label_values(kube_pod_info, cluster)",
+        "hide": 2,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": "label_values(kube_pod_info, cluster)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 2,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "default",
+          "value": "default"
+        },
+        "datasource": "$datasource",
+        "definition": "label_values(kube_pod_info{cluster=\"$cluster\"}, namespace)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "namespace",
+        "options": [],
+        "query": "label_values(kube_pod_info{cluster=\"$cluster\"}, namespace)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 2,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "wordpress",
+          "value": "wordpress"
+        },
+        "datasource": "$datasource",
+        "definition": "label_values(mixin_pod_workload{cluster=\"$cluster\", namespace=\"$namespace\"}, workload)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "workload",
+        "options": [],
+        "query": "label_values(mixin_pod_workload{cluster=\"$cluster\", namespace=\"$namespace\"}, workload)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 2,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "ingress_http",
+          "value": "ingress_http"
+        },
+        "datasource": "$datasource",
+        "definition": "label_values(envoy_http_conn_manager_prefix)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "prefix",
+        "options": [],
+        "query": "label_values(envoy_http_conn_manager_prefix)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
